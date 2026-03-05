@@ -1,14 +1,9 @@
-server:
-  dev:
-    enabled: true        # dev mode — no unseal needed, perfect for testing
-    devRootToken: "root" # fixed token so ESO can always authenticate
-
-ui:
-  enabled: true
-
-injector:
-  enabled: false         # we use ESO instead of the Vault agent injector
-
-# Explicitly disable webhook
-agentInjector:
-  enabled: false
+vault:
+  server:
+    dev:
+      enabled: true
+      devRootToken: "root"
+  ui:
+    enabled: true
+  injector:
+    enabled: false

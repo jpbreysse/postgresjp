@@ -8,3 +8,7 @@ ui:
 
 injector:
   enabled: false         # we use ESO instead of the Vault agent injector
+
+# Explicitly disable webhook
+agentInjector:
+  enabled: false

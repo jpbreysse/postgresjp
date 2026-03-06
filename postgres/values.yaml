@@ -1,10 +1,12 @@
-auth:
-  username: pguser
-  database: mydb
-  existingSecret: postgres-secret    # the K8s secret created by ESO
-  secretKeys:
-    userPasswordKey: password
-
-primary:
-  persistence:
-    enabled: false                   # disabled for local testing
+postgresql:
+  image:
+    tag: "16"
+  auth:
+    username: pguser
+    database: mydb
+    existingSecret: postgres-secret
+    secretKeys:
+      userPasswordKey: password
+  primary:
+    persistence:
+      enabled: false

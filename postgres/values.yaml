@@ -1,5 +1,8 @@
 image:
+  registry: docker.io
+  repository: bitnami/postgresql
   tag: "17.6.0-debian-12-r4"
+  pullPolicy: IfNotPresent    # ← use local cache, don't pull
 
 auth:
   username: pguser

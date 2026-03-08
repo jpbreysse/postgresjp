@@ -1,16 +1,17 @@
-image:
-  registry: docker.io
-  repository: bitnami/postgresql
-  tag: "17.6.0-debian-12-r4"
-  pullPolicy: IfNotPresent    # ← use local cache, don't pull
+postgresql:
+  image:
+    registry: docker.io
+    repository: bitnami/postgresql
+    tag: "17.6.0-debian-12-r4"
+    pullPolicy: IfNotPresent
 
-auth:
-  username: pguser
-  database: mydb
-  existingSecret: postgres-secret
-  secretKeys:
-    userPasswordKey: password
+  auth:
+    username: pguser
+    database: mydb
+    existingSecret: postgres-secret
+    secretKeys:
+      userPasswordKey: password
 
-primary:
-  persistence:
-    enabled: false
+  primary:
+    persistence:
+      enabled: false

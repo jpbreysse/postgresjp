@@ -1,0 +1,56 @@
+We created the secrets **manually inside the Vault pod** using `kubectl exec`. Here's exactly what we did:
+
+## What we ran
+
+```bash
+# 1. Open a shell inside the Vault pod
+kubectl exec -it vault-0 -n vault -- sh
+
+# 2. Set connection config (inside the pod)
+export VAULT_ADDR='http://127.0.0.1:8200'
+export VAULT_TOKEN='root'
+
+# 3. Store the secrets (first attempt - only one key)
+vault kv put secret/postgres password="myS3cretPgPass"
+
+# 4. Later updated with both keys
+vault kv put secret/postgres \
+  password="myS3cretPgPass" \
+  postgres-password="myS3cretPgPass"
+
+# 5. Verify
+vault kv get secret/postgres
+
+# 6. Exit
+exit
+```
+
+## What this created in Vault
+
+```
+secret/                     ← KV v2 secrets engine (default in dev mode)
+  └── postgres              ← our secret path
+        ├── password            = myS3cretPgPass
+        └── postgres-password   = myS3cretPgPass
+```
+
+## Why manually?
+
+This is the **intentional design** — actual secret values should never be in Git or in any automated manifest. The manual step is the security boundary:
+
+```
+Everything in Git (safe):
+  ├── ExternalSecret → "fetch from secret/postgres"
+  └── SecretStore    → "connect to Vault at vault.vault.svc..."
+
+Only in Vault (never in Git):
+  └── secret/postgres → the actual passwords
+```
+
+## In production this would be done via
+
+- A **CI/CD pipeline** with restricted Vault access
+- A **Vault operator** seeding initial secrets
+- A **secure onboarding script** run once by an admin
+
+But the principle stays the same — secret values only ever enter through Vault directly, never through Git.

@@ -1,0 +1,17 @@
+postgresql:
+  image:
+    registry: docker.io
+    repository: bitnami/postgresql
+    tag: "17.6.0-debian-12-r4"
+    pullPolicy: IfNotPresent
+
+  auth:
+    username: pguser2
+    database: mydb2
+    existingSecret: postgres2-secret
+    secretKeys:
+      userPasswordKey: password
+
+  primary:
+    persistence:
+      enabled: false

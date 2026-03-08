@@ -1,0 +1,23 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: postgres2
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: https://github.com/jpbreysse/postgresjp
+    targetRevision: HEAD
+    path: postgres2
+    helm:
+      valueFiles:
+        - values.yaml
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: postgres2
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

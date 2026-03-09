@@ -1,0 +1,40 @@
+name: Validate Manifests
+
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install Helm
+        uses: azure/setup-helm@v3
+        with:
+          version: '3.14.0'
+
+      - name: Add Helm repositories
+        run: |
+          helm repo add bitnami https://charts.bitnami.com/bitnami
+          helm repo add hashicorp https://helm.releases.hashicorp.com
+          helm repo add external-secrets https://charts.external-secrets.io
+          helm repo update
+
+      - name: Lint Helm charts
+        run: |
+          helm lint postgres/
+          helm lint postgres2/
+          helm lint vault/
+          helm lint eso-operator/
+
+      - name: Validate Helm templates
+        run: |
+          helm dependency update postgres/
+          helm template postgres postgres/ --values postgres/values.yaml
+
+          helm dependency update postgres2/
+          helm template postgres2 postgres2/ --values postgres2/values.yaml
